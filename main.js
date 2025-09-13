@@ -24,6 +24,9 @@ let controls, stats;
 let computeParticles;
 
 let isOrbitControlsActive;
+let cameraAngleY = 0;
+let cameraAngleX = 0.3;
+let cameraDistance = 20;
 
 const timestamps = document.getElementById('timestamps');
 
@@ -34,7 +37,7 @@ function init() {
     const { innerWidth, innerHeight } = window;
 
     camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, .1, 1000);
-    camera.position.set(0, 5, 20);
+    camera.position.set(0, 9, 20);
 
     scene = new THREE.Scene();
 
@@ -191,31 +194,6 @@ function init() {
 
     // controls
 
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.minDistance = 5;
-    controls.maxDistance = 200;
-    controls.target.set(0, - 8, 0);
-
-    controls.update();
-
-    controls.addEventListener('start', () => {
-
-        isOrbitControlsActive = true;
-
-    });
-    controls.addEventListener('end', () => {
-
-        isOrbitControlsActive = false;
-
-    });
-
-    controls.touches = {
-        ONE: null,
-        TWO: THREE.TOUCH.DOLLY_PAN
-    };
-
-    //
 
     window.addEventListener('resize', onWindowResize);
 
@@ -245,11 +223,28 @@ async function animate() {
 
     stats.update();
 
-    controls.update();
-
+    updateCameraPosition();
     await renderer.computeAsync(computeParticles);
     renderer.resolveTimestampsAsync(THREE.TimestampQuery.COMPUTE);
 
     await renderer.renderAsync(scene, camera);
     renderer.resolveTimestampsAsync(THREE.TimestampQuery.RENDER);
 }
+
+// Add the updateCameraPosition function:
+function updateCameraPosition() {
+    const x = Math.cos(cameraAngleY) * Math.cos(cameraAngleX) * cameraDistance;
+    const y = Math.sin(cameraAngleX) * cameraDistance;
+    const z = Math.sin(cameraAngleY) * Math.cos(cameraAngleX) * cameraDistance;
+
+    camera.position.set(x, y, z);
+    camera.lookAt(0, -8, 0); // Match the controls target
+}
+function onWheel(event) {
+    event.preventDefault();
+    const delta = event.deltaY * 0.002;
+    cameraAngleY += delta;  // This rotates the camera horizontally
+    updateCameraPosition();
+}
+
+window.addEventListener('wheel', onWheel);
