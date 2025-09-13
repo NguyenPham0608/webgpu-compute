@@ -197,14 +197,14 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    // gui
+    // // gui
 
-    const gui = new GUI();
+    // const gui = new GUI();
 
-    gui.add(gravity, 'value', - .0098, 0, 0.0001).name('gravity');
-    gui.add(bounce, 'value', .1, 1, 0.01).name('bounce');
-    gui.add(friction, 'value', .96, .99, 0.01).name('friction');
-    gui.add(size, 'value', .12, .5, 0.01).name('size');
+    // gui.add(gravity, 'value', - .0098, 0, 0.0001).name('gravity');
+    // gui.add(bounce, 'value', .1, 1, 0.01).name('bounce');
+    // gui.add(friction, 'value', .96, .99, 0.01).name('friction');
+    // gui.add(size, 'value', .12, .5, 0.01).name('size');
 
 }
 
